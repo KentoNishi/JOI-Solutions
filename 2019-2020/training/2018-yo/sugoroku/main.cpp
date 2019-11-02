@@ -11,33 +11,20 @@
 using namespace std;
 
 int main() {
-    int N, M;
+    int N;
     cin >> N;
-    vector<bool> board=vector<bool>(2019);
-    vector<int> positions=vector<int>(N);
+    vector<int> board=vector<int>(N+2,0);
     for(int i=0;i<N;i++){
-        int a;
-        cin >> a;
-        a--;
-        board[a]=true;
-        positions[i]=a;
-    }
-    cin >> M;
-    for(int i=0;i<M;i++){
-        int a;
-        cin >> a;
-        a--;
-        if(positions[a]<2018 && !board[positions[a]+1]){
-            board[positions[a]+1]=true;
-            board[positions[a]]=false;
-            positions[a]++;
-        }
+        cin>>board[i+1];
     }
     int ans=0;
-    for(int i=0;i<2019;i++){
-        if(board[i]){
-            cout << i+1 << endl;
+    int left=0;
+    for(int i=0;i<N+2;i++){
+        if(board[i]!=1){
+            ans=max(ans,i-left-1);
+            left=i;
         }
     }
+    cout << ans+1 << endl;
     return 0;
 }
