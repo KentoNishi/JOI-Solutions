@@ -21,7 +21,7 @@
                 "args": [
                     "/c",
                     "python",
-                    "grade.py",
+                    "grader.py",
                     "\"${file}\""
                 ]
             },
