@@ -1,4 +1,4 @@
-// url
+// // https://www.ioi-jp.org/joi/2017/2018-yo/2018-yo-t2.html
 
 #include <algorithm>
 #include <array>

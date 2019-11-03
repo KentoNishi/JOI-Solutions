@@ -8,7 +8,26 @@
             },
             "cwd":"${fileDirname}"
         }
-    }/*,
+    },
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "JOI Tests",
+            "windows":{
+                "command": "cmd.exe",
+                "options":{
+                    "cwd": "C:\\Users\\kento\\OneDrive\\Files\\Documents\\GitHub\\JOI-Grader"
+                },
+                "args": [
+                    "/c",
+                    "python",
+                    "grade.py",
+                    "${file}"
+                ]
+            },
+            "group": "test"
+        }
+    ]/*,
     "tasks": [
         {
             "label": "Build on WSL",
