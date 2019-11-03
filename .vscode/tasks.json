@@ -13,19 +13,22 @@
         {
             "type": "shell",
             "label": "JOI Tests",
-            "windows":{
+            "windows": {
                 "command": "cmd.exe",
-                "options":{
+                "options": {
                     "cwd": "C:\\Users\\kento\\OneDrive\\Files\\Documents\\GitHub\\JOI-Grader"
                 },
                 "args": [
                     "/c",
                     "python",
                     "grade.py",
-                    "${file}"
+                    "\"${file}\""
                 ]
             },
-            "group": "test"
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         }
     ]/*,
     "tasks": [

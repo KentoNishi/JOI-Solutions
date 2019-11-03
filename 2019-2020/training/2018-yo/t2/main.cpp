@@ -1,4 +1,5 @@
-// // https://www.ioi-jp.org/joi/2017/2018-yo/2018-yo-t2.html
+// Test case path: [C:\Users\kento\OneDrive\Files\Documents\GitHub\JOI-Solutions\2019-2020\training\2018-yo\2018-yo\2018-yo-t2]
+// https://www.ioi-jp.org/joi/2017/2018-yo/2018-yo-t2.html
 
 #include <algorithm>
 #include <array>

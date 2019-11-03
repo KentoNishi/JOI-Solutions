@@ -1,4 +1,5 @@
-// // https://www.ioi-jp.org/joi/2017/2018-yo/2018-yo-t3.html
+// Test case path: [C:\Users\kento\OneDrive\Files\Documents\GitHub\JOI-Solutions\2019-2020\training\2018-yo\2018-yo\2018-yo-t3]
+// https://www.ioi-jp.org/joi/2017/2018-yo/2018-yo-t3.html
 
 #include <algorithm>
 #include <array>
@@ -14,9 +15,9 @@ int H, W;
 
 int findSum(int linex, int liney, vector<vector<int>> &grid) {
     int sum = 0;
-    for (int x = 0; x <W;x++){
-        for(int y=0;y<H;y++){
-            sum+=min(abs(liney-y),abs(linex-x))*grid[x][y];
+    for (int x = 0; x < W; x++) {
+        for (int y = 0; y < H; y++) {
+            sum += min(abs(liney - y), abs(linex - x)) * grid[x][y];
         }
     }
     return sum;
@@ -31,7 +32,7 @@ int main() {
             cin >> grid[k][i];
         }
     }
-    int ans=INFINITY;
+    int ans = INFINITY;
     for (int liney = 0; liney < H; liney++) {
         for (int linex = 0; linex < W; linex++) {
             int localAns = findSum(linex, liney, grid);
