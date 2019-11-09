@@ -1,13 +1,6 @@
 // Test case path: [path]
 
-#include <algorithm>
-#include <array>
-#include <fstream>
-#include <iostream>
-#include <set>
-#include <string>
-#include <vector>
-#include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
