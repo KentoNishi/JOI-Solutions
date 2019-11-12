@@ -1,3 +1,4 @@
+// official solution
 #include <algorithm>
 #include <stdio.h>
 using namespace std;
@@ -21,13 +22,13 @@ int main() {
         sz[p[i]]++;
     }
     // read into the predefined arrays
-    for (int i = 0; i < b; i++){
+    for (int i = 0; i < b; i++) {
         for (int j = 0; j < a; j++) {
             sum[i][j + 1] += sum[i][j];
         }
     }
     // finish building the sum array so
-    // [i][j] is the number of occurences 
+    // [i][j] is the number of occurences
     // of type i before location j
     for (int i = 0; i < (1 << b); i++)
         dp[i] = 999999999;
