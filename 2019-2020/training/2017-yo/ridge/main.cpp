@@ -7,19 +7,19 @@ int H, W;
 
 struct Pixel {
     int h;
-    set<pair<int, int>> to;
+    set<int> to;
 };
 
 vector<vector<Pixel>> grid;
 
-set<pair<int, int>> drop(int i, int j) {
+set<int> drop(int i, int j) {
     if (i < 0 || i >= H || j < 0 || j >= W) {
         return {};
     }
     if (grid[i][j].to.size() > 0) {
         return grid[i][j].to;
     }
-    set<pair<int, int>> canGo;
+    set<int> canGo;
     vector<int> d0 = {0, 0, 1, -1};
     vector<int> d1 = {1, -1, 0, 0};
     for (int k = 0; k < 4; k++) {
@@ -27,12 +27,12 @@ set<pair<int, int>> drop(int i, int j) {
             continue;
         }
         if (grid[i + d0[k]][j + d1[k]].h < grid[i][j].h) {
-            set<pair<int, int>> res = drop(i + d0[k], j + d1[k]);
+            set<int> res = drop(i + d0[k], j + d1[k]);
             canGo.insert(res.begin(), res.end());
         }
     }
     if (canGo.size() == 0) {
-        canGo.insert(make_pair(i, j));
+        canGo.insert(i * 1001 + j);
     }
     grid[i][j].to = canGo;
     return canGo;
