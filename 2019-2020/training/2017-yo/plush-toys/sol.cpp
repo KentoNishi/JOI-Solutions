@@ -35,14 +35,14 @@ int main() {
     // set arrangement of all tynumses to INF
     arrangement[0] = 0;
     for (int i = 0; i < (1 << b); i++) {
-        int numsos = 0;
+        int position = 0;
         for (int j = 0; j < b; j++)
             if (i & (1 << j))
-                numsos += quantities[j];
+                position += quantities[j];
         for (int j = 0; j < b; j++) {
             if (i & (1 << j))
                 continue;
-            arrangement[i + (1 << j)] = min(arrangement[i + (1 << j)], arrangement[i] + quantities[j] - toLeft[j][numsos + quantities[j]] + toLeft[j][numsos]);
+            arrangement[i + (1 << j)] = min(arrangement[i + (1 << j)], arrangement[i] + quantities[j] - toLeft[j][position + quantities[j]] + toLeft[j][position]);
         }
     }
     printf("%d\n", arrangement[(1 << b) - 1]);
