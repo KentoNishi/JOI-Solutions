@@ -11,7 +11,7 @@ int toLeft[20][110000];
 // of type occurs before element
 int quantities[20];
 // how many times each type occurs
-int arrangement[1 << 20];
+int used[1 << 20];
 // 100000000000000000000
 int main() {
     int a, b;
@@ -32,26 +32,34 @@ int main() {
     // [i][j] is the number of occurences
     // of type i before location j
     for (int i = 0; i < (1 << b); i++)
-        arrangement[i] = 999999999;
-    // set arrangement of all types to INF
-    arrangement[0] = 0;
+        used[i] = 999999999;
+    // set used of all types to INF
+    used[0] = 0;
     for (int i = 0; i < (1 << b); i++) {
+        // for every configuration of used chunks
+        // ex 00,01,10,11
         for (int c = 0; c <= i; c++) {
-            cout << arrangement[c] << " ";
+            cout << used[c] << " ";
         }
         cout << endl;
         int position = 0;
         for (int j = 0; j < b; j++) {
+            // for each type of block
             if (i & (1 << j)) {
+                // if it's in the configuration of 
+                // blocks that were chosen
                 position += quantities[j];
+                // place, order doesn't matter
             }
         }
-        cout << "When i was " << i << " position was " << position << endl;
         for (int j = 0; j < b; j++) {
-            if (i & (1 << j))
+            if (i & (1 << j)) {
+                // if it's in the configuration, then
+                // it can't be placed next
                 continue;
-            arrangement[i + (1 << j)] = min(arrangement[i + (1 << j)], arrangement[i] + quantities[j] - toLeft[j][position + quantities[j]] + toLeft[j][position]);
+            }
+            used[i + (1 << j)] = min(used[i + (1 << j)], used[i] + quantities[j] - toLeft[j][position + quantities[j]] + toLeft[j][position]);
         }
     }
-    printf("%d\n", arrangement[(1 << b) - 1]);
+    printf("%d\n", used[(1 << b) - 1]);
 }
