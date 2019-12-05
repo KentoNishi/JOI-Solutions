@@ -20,7 +20,7 @@ int main() {
     }
     for(int i=0;i<M;i++){
         for(int j=0;j<N;j++){
-            toLeft[i][j+1]=toLeft[i][j];
+            toLeft[i][j+1]+=toLeft[i][j];
         }
     }
     return 0;
