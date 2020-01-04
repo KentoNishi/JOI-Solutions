@@ -1,4 +1,4 @@
-// Test case path: [path]
+// Test case path: [C:\Users\kento\Downloads\2020-yo2-data\2020-yo2-t4]
 // https://atcoder.jp/contests/joi2020yo2/tasks/joi2020_yo2_d
 
 #include <bits/stdc++.h>
