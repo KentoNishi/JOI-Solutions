@@ -8,66 +8,62 @@ int N, Q;
 long long T;
 
 struct Person {
-    long long initialPos;
+    long long start;
+    long long end;
     int velocity;
-    long long finalPos;
+    bool seen = false;
 };
-
-bool comp(Person a, Person b) {
-    return a.initialPos < b.initialPos;
-}
 
 int main() {
     cin >> N >> T >> Q;
-    vector<Person> goingLeft;
-    vector<Person> goingRight;
-    vector<pair<int, int>> people;
+    vector<Person> people;
     for (int i = 0; i < N; i++) {
         long long a, b;
         cin >> a >> b;
-        Person person = Person();
-        person.initialPos = a;
-        person.velocity = b == 1 ? 1 : -1;
-        person.finalPos = person.initialPos + person.velocity * T;
-        if (person.velocity == 1) {
-            people.push_back({0, goingRight.size()});
-            goingRight.push_back(person);
+        Person p = Person();
+        p.start = a;
+        p.velocity = b == 1 ? 1 : -1;
+        p.end = p.start + p.velocity * T;
+        people.push_back(p);
+    }
+    vector<int> goingRight;
+    vector<int> goingLeft;
+    vector<long long> goingRightPos;
+    for (int i = 0; i < N; i++) {
+        if (people[i].velocity == 1) {
+            goingRight.push_back(i);
+            goingRightPos.push_back(people[i].start);
         } else {
-            people.push_back({1, goingLeft.size()});
-            goingLeft.push_back(person);
+            goingLeft.push_back(i);
         }
     }
-    sort(goingLeft.begin(), goingLeft.end(), comp);
-    sort(goingRight.begin(), goingRight.end(), comp);
-    vector<long long> goingRightInits = vector<long long>(goingRight.size());
-    for (int i = 0; i < goingRight.size(); i++) {
-        goingRightInits[i] = goingRight[i].initialPos;
-    }
-    for (int i = 0; i < goingLeft.size(); i++) {
-        auto point = lower_bound(goingRightInits.begin(), goingRightInits.end(), goingLeft[i].initialPos);
-        if (point == goingRightInits.begin() || point == goingRightInits.end()) {
-            continue;
+    int nextR = 0;
+    for (int i = 0; i < goingLeft.size();) {
+        auto p = lower_bound(goingRightPos.begin(), goingRightPos.end(), people[goingLeft[i]].start);
+        if (p == goingRightPos.begin() || p == goingRightPos.end()) {
+            break;
         }
-        point--;
-        int r = distance(goingRightInits.begin(), point);
-        while (goingLeft[i].initialPos - goingRight[r].initialPos <= 2 * T) {
-            goingLeft[i].finalPos = max(goingLeft[i].finalPos, goingLeft[i].initialPos - (goingLeft[i].initialPos - goingRight[r].initialPos) / 2);
-            goingRight[r].finalPos = min(goingRight[r].finalPos, goingRight[r].initialPos + (goingLeft[i].initialPos - goingRight[r].initialPos) / 2);
-            if (r == 0) {
-                break;
+        int r = distance(goingRightPos.begin(), p);
+        long long timeTaken = people[goingLeft[i]].start - people[goingRight[r - 1]].start;
+        long long locationOfCollision = (people[goingLeft[i]].start + people[goingRight[r - 1]].start) / 2;
+        for (int j = r - 1; j >= nextR; j--) {
+            if (timeTaken <= 2 * T) {
+                people[goingLeft[i]].end = locationOfCollision;
+                people[goingRight[j]].end = locationOfCollision;
             }
-            r--;
         }
+        i++;
+        while (i < goingLeft.size() && people[goingLeft[i]].start - locationOfCollision <= T) {
+            people[goingLeft[i]].end = locationOfCollision;
+            i++;
+        }
+        nextR = r;
     }
     for (int i = 0; i < Q; i++) {
         int a;
         cin >> a;
         a--;
-        if (people[a].first == 0) {
-            cout << goingRight[people[a].second].finalPos << endl;
-        } else {
-            cout << goingLeft[people[a].second].finalPos << endl;
-        }
+        cout << people[a].end << endl;
     }
     return 0;
 }
