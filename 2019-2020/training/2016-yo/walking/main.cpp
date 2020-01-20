@@ -26,38 +26,34 @@ int main() {
         p.end = p.start + p.velocity * T;
         people.push_back(p);
     }
-    vector<int> goingRight;
-    vector<int> goingLeft;
-    vector<long long> goingRightPos;
-    for (int i = 0; i < N; i++) {
-        if (people[i].velocity == 1) {
-            goingRight.push_back(i);
-            goingRightPos.push_back(people[i].start);
-        } else {
-            goingLeft.push_back(i);
-        }
-    }
-    int nextR = 0;
-    for (int i = 0; i < goingLeft.size();) {
-        auto p = lower_bound(goingRightPos.begin(), goingRightPos.end(), people[goingLeft[i]].start);
-        if (p == goingRightPos.begin() || p == goingRightPos.end()) {
-            break;
-        }
-        int r = distance(goingRightPos.begin(), p);
-        long long timeTaken = people[goingLeft[i]].start - people[goingRight[r - 1]].start;
-        long long locationOfCollision = (people[goingLeft[i]].start + people[goingRight[r - 1]].start) / 2;
-        for (int j = r - 1; j >= nextR; j--) {
-            if (timeTaken <= 2 * T) {
-                people[goingLeft[i]].end = locationOfCollision;
-                people[goingRight[j]].end = locationOfCollision;
+    sort(people.begin(), people.end(), [](Person a, Person b) {
+        return a.start < b.start;
+    });
+    for (int i = 0; i < N - 1; i++) {
+        if (people[i].velocity == 1 && people[i + 1].velocity == -1) {
+            // might collide
+            if (people[i + 1].start - people[i].start <= 2 * T) {
+                // definitely will collide
+                long long collision = (people[i].start + people[i + 1].start) / 2;
+                people[i].end = collision;
+                people[i + 1].end = collision;
+                int j = i - 1;
+                while (j >= 0 &&
+                       people[j].velocity == 1 &&
+                       collision - people[j].start <= T) {
+                    people[j].end = collision;
+                    j--;
+                }
+                j = i + 1;
+                while (j < N &&
+                       people[j].velocity == -1 &&
+                       people[j].start - collision <= T) {
+                    people[j].end = collision;
+                    j++;
+                }
+                i = j - 1;
             }
         }
-        i++;
-        while (i < goingLeft.size() && people[goingLeft[i]].start - locationOfCollision <= T) {
-            people[goingLeft[i]].end = locationOfCollision;
-            i++;
-        }
-        nextR = r;
     }
     for (int i = 0; i < Q; i++) {
         int a;
