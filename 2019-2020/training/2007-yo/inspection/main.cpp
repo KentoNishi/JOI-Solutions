@@ -39,18 +39,17 @@ int main() {
     }
     for (auto &test : tests) {
         if (test.result == 0) {
-            int toGuess = -1;
-            for (auto &part : test.parts) {
-                if (!states[part].confirmedGood && toGuess != -1) {
-                    toGuess = -1;
-                    break;
-                }
-                if (!states[part].confirmedBad && !states[part].confirmedGood) {
-                    toGuess = part;
+            int numGood = 0;
+            int indexBad = -1;
+            for (int i = 0; i < 3; i++) {
+                if (states[test.parts[i]].confirmedGood) {
+                    numGood++;
+                } else if (!states[test.parts[i]].confirmedGood) {
+                    indexBad = i;
                 }
             }
-            if (toGuess != -1) {
-                states[toGuess].confirmedBad = true;
+            if (numGood == 2 && indexBad != -1) {
+                states[test.parts[indexBad]].confirmedBad = true;
             }
         }
     }
