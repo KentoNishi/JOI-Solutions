@@ -7,23 +7,27 @@ using namespace std;
 int H, W, K;
 
 vector<vector<int>> grid;
-int ans = 0;
 
-void doFill(int x, int y, int k, int total, vector<vector<bool>> picked) {
+int doFill(int x, int y, int k, vector<vector<bool>> pickedUp) {
     if (x < 0 || y < 0 || x >= H || y >= W || k == -1 || grid[x][y] == -1) {
-        return;
+        return -1;
     }
-    if (!picked[x][y]) {
-        total += grid[x][y];
+    int thisStore = (pickedUp[x][y] ? 0 : grid[x][y]);
+    pickedUp[x][y] = true;
+    vector<int> results = {doFill(x + 1, y, k, pickedUp),
+                           doFill(x, y + 1, k, pickedUp),
+                           doFill(x - 1, y, k - 1, pickedUp),
+                           doFill(x, y - 1, k - 1, pickedUp)};
+    int local = -1;
+    for (int &result : results) {
+        if (result != -1) {
+            local = max(local, result + thisStore);
+        }
     }
-    picked[x][y] = true;
     if (x == H - 1 && y == W - 1) {
-        ans = max(ans, total);
+        return max(local, grid[x][y]);
     }
-    doFill(x + 1, y, k, total, picked);
-    doFill(x, y + 1, k, total, picked);
-    doFill(x - 1, y, k - 1, total, picked);
-    doFill(x, y - 1, k - 1, total, picked);
+    return local;
 }
 
 int main() {
@@ -42,7 +46,7 @@ int main() {
             }
         }
     }
-    doFill(0, 0, K, 0, vector<vector<bool>>(H, vector<bool>(W)));
-    cout << ans << endl;
+    vector<vector<bool>> pickedUp = vector<vector<bool>>(H, vector<bool>(W));
+    cout << doFill(0, 0, K, pickedUp) << endl;
     return 0;
 }
