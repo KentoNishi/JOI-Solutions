@@ -31,6 +31,9 @@ bool operator==(const Point &a, const Point &b) {
 bool operator<(const State &a, const State &b) {
     return (a.p == b.p) ? (a.k == b.k ? (a.pickedUp < b.pickedUp) : (a.k < b.k)) : (a.p < b.p);
 }
+bool operator==(const State &a, const State &b) {
+    return a.p == b.p && a.k == b.k && a.pickedUp == b.pickedUp;
+}
 
 vector<vector<int64>> grid;
 map<State, int64> memo;
@@ -58,10 +61,11 @@ int64 doFill(int64 x, int64 y, int64 k, set<Point> pickedUp) {
     if (grid[x][y] > 0) {
         pickedUp.insert({x, y});
     }
-    for (auto iter = pickedUp.begin(); iter != pickedUp.end(); iter++) {
+    for (auto iter = pickedUp.begin(); iter != pickedUp.end();) {
         if (max(x - iter->x, 0LL) + max(y - iter->y, 0LL) > K) {
-            pickedUp.erase(iter);
-            iter--;
+            iter = pickedUp.erase(iter);
+        } else {
+            iter++;
         }
     }
     vector<int64> results = {doFill(x + 1, y, k, pickedUp),
