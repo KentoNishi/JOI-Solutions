@@ -7,30 +7,16 @@ using namespace std;
 
 int64 H, W, K;
 
-struct Point {
-    int64 x;
-    int64 y;
-    Point(int64 x, int64 y) {
-        this->x = x;
-        this->y = y;
-    }
-};
-
 struct State {
-    Point p;
+    pair<int64, int64> p;
     int64 k;
-    set<Point> pickedUp;
+    set<pair<int64, int64>> pickedUp;
 };
 
-bool operator<(const Point &a, const Point &b) {
-    return (a.x == b.x ? (a.y < b.y) : (a.x < b.x));
-}
-bool operator==(const Point &a, const Point &b) {
-    return a.x == b.x && a.y == b.y;
-}
 bool operator<(const State &a, const State &b) {
     return (a.p == b.p) ? (a.k == b.k ? (a.pickedUp < b.pickedUp) : (a.k < b.k)) : (a.p < b.p);
 }
+
 bool operator==(const State &a, const State &b) {
     return a.p == b.p && a.k == b.k && a.pickedUp == b.pickedUp;
 }
@@ -38,15 +24,15 @@ bool operator==(const State &a, const State &b) {
 vector<vector<int64>> grid;
 map<State, int64> memo;
 
-bool alreadyPickedUp(set<Point> &pickedUp, int64 x, int64 y) {
-    return pickedUp.find(Point(x, y)) != pickedUp.end();
+bool alreadyPickedUp(set<pair<int64, int64>> &pickedUp, int64 x, int64 y) {
+    return pickedUp.find(pair<int64, int64>(x, y)) != pickedUp.end();
 }
 
 bool alreadyVisited(State state) {
     return memo.find(state) != memo.end();
 }
 
-int64 doFill(int64 x, int64 y, int64 k, set<Point> pickedUp) {
+int64 doFill(int64 x, int64 y, int64 k, set<pair<int64, int64>> pickedUp) {
     if (x < 0 || y < 0 || x >= H || y >= W || k == -1 || grid[x][y] == -1) {
         return -1;
     }
@@ -62,7 +48,7 @@ int64 doFill(int64 x, int64 y, int64 k, set<Point> pickedUp) {
         pickedUp.insert({x, y});
     }
     for (auto iter = pickedUp.begin(); iter != pickedUp.end();) {
-        if (max(x - iter->x, 0LL) + max(y - iter->y, 0LL) > K) {
+        if (max(x - iter->first, 0LL) + max(y - iter->second, 0LL) > K) {
             iter = pickedUp.erase(iter);
         } else {
             iter++;
@@ -103,6 +89,6 @@ int main() {
         }
     }
     memo = map<State, int64>();
-    cout << doFill(0, 0, K, set<Point>()) << endl;
+    cout << doFill(0, 0, K, set<pair<int64, int64>>()) << endl;
     return 0;
 }
