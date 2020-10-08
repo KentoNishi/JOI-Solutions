@@ -2,62 +2,47 @@
 // https://atcoder.jp/contests/joi2018yo/tasks/joi2018_yo_e
 
 #include <bits/stdc++.h>
-#define int64 long long
+#define int64 int
 using namespace std;
 
 int H, W;
-vector<vector<int>> trees;
 
-struct State {
-    bool visited = false;
-    int time = INFINITY;
-    int dist = INFINITY;
-    int trees;
-};
-
-vector<vector<State>> dp;
+vector<vector<vector<int>>> dp;
 int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
-
-State& time(int x, int y) {
-    State& me = dp[x][y];
-    if (!me.visited) {
-        me.visited = true;
-        for (int i = 0; i < 4; i++) {
-            int nx = dx[i] + x;
-            int ny = dy[i] + y;
-            if (nx < 0 || nx >= H || ny < 0 || ny >= W) {
-                continue;
-            }
-            State& from = time(nx, ny);
-            int time = from.time + (2 * from.dist + 1) * me.trees + 1;
-            int dist = from.dist + 1;
-            if (time < me.time || (time == me.time && dist < me.dist)) {
-                me.time = time;
-                me.dist = dist;
-            }
-        }
-    }
-    return me;
-}
+vector<vector<int>> trees;
 
 int main() {
     cin >> H >> W;
-    dp = vector<vector<State>>(H, vector<State>(W));
+    dp = vector<vector<vector<int>>>(H, vector<vector<int>>(W, vector<int>(H * W + 1, INT_MAX)));
+    trees = vector<vector<int>>(H, vector<int>(W));
     for (int i = 0; i < H; i++) {
         for (int j = 0; j < W; j++) {
-            cin >> dp[i][j].trees;
+            cin >> trees[i][j];
         }
     }
-    dp[0][0].visited = true;
-    dp[0][0].dist = 0;
-    dp[0][0].time = 0;
-    cout << time(H - 1, W - 1).time - time(H - 1, W - 1).dist << endl;
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
-            cout << dp[i][j].time << "(" << dp[i][j].dist << ") ";
+    dp[0][0][0] = 0;
+    for (int dist = 0; dist < H * W; dist++) {
+        for (int x = 0; x < H; x++) {
+            for (int y = 0; y < W; y++) {
+                if (dp[x][y][dist] == INT_MAX) {
+                    continue;
+                }
+                for (int i = 0; i < 4; i++) {
+                    int nx = dx[i] + x;
+                    int ny = dy[i] + y;
+                    if (nx < 0 || nx >= H || ny < 0 || ny >= W) {
+                        continue;
+                    }
+                    dp[nx][ny][dist + 1] = min(dp[nx][ny][dist + 1], dp[x][y][dist] + (2 * dist + 1) * trees[nx][ny] + 1);
+                }
+            }
         }
-        cout << endl;
     }
+    int ans = INT_MAX;
+    for (int i = 0; i <= H * W; i++) {
+        ans = min(ans, dp[H - 1][W - 1][i] - i);
+    }
+    cout << ans << endl;
     return 0;
 }
