@@ -32,15 +32,16 @@ int main() {
     int ans = 0;
     for (Area &a : areas) {
         auto &d = dp[a.x][a.y];
+        if (d.size() >= 2) ans++;
+        if (d.size() == 0) d.insert({a.x, a.y});
         for (int i = 0; i < 4; i++) {
             int nx = a.x + dx[i];
             int ny = a.y + dy[i];
-            if (nx < 0 || ny < 0 || nx >= N || ny >= M || grid[nx][ny] > grid[a.x][a.y]) continue;
-            auto d2 = dp[nx][ny];
-            d.insert(d2.begin(), d2.end());
+            if (nx < 0 || ny < 0 || nx >= N || ny >= M || grid[nx][ny] < grid[a.x][a.y]) continue;
+            auto &d2 = dp[nx][ny];
+            d2.insert(d.begin(), d.end());
         }
-        if (d.size() == 0) d.insert({a.x, a.y});
-        if (d.size() >= 2) ans++;
+        d.clear();
     }
     cout << ans << endl;
     return 0;
